@@ -32,12 +32,12 @@ def create_eda_prompt(data_str):
     **Dataset Overview**:
     - **Data Sample**:
       ```
-      {data_str.split('Data Description:')[0]}
+      {df.head().to_string(}
       ```
 
     - **Data Description**:
       ```
-      {data_str.split('Data Description:')[1]}
+      {df.describe(include='all').to_string()}
       ```
 
     I have provided you with a dataset containing various features. Your task is to perform comprehensive model training and evaluation. The dataset includes a mix of numerical and categorical features. Please create a Python function that:
