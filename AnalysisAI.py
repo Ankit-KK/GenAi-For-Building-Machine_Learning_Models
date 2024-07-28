@@ -183,5 +183,8 @@ def main():
             # Add download button
             st.markdown(get_binary_file_downloader_html(file_path, 'Generated Python File'), unsafe_allow_html=True)
 
+            # Warning message about potential code adjustments
+            st.warning("The generated code might contain minor errors or require slight adjustments.")
+
 if __name__ == "__main__":
     main()
