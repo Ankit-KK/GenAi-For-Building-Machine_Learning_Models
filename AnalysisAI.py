@@ -40,55 +40,57 @@ def create_eda_prompt(data_str):
       {data_str.split('Data Description:')[1].strip()}
       ```
 
-    I have provided you with a dataset containing various features. Your task is to perform comprehensive model training and evaluation. The dataset includes a mix of numerical and categorical features. Please create a Python function that:
+   I have provided you with a dataset containing various features. Your task is to perform comprehensive model training and evaluation. The dataset includes a mix of numerical and categorical features. Please create a Python function that:
 
-    1. **Prompts for Target Column:**
-       - Asks the user for the target column name.
+1. **Prompts for Target Column:**
+   - Asks the user for the target column name.
 
-    2. **Data Preparation:**
-       - Separates features and the target variable from the dataset.
-       - Drops irrelevant columns that do not contribute to the model's prediction.
-       - Performs data cleaning, including handling missing values.
+2. **Data Preparation:**
+   - Separates features and the target variable from the dataset.
+   - Drops irrelevant columns that do not contribute to the model's prediction.
+   - Performs data cleaning, including handling missing values.
 
-    3. **Feature Engineering and Preprocessing:**
-       - Identifies numerical and categorical columns.
-       - Applies preprocessing steps:
-         - For numerical columns:
-           - Imputes missing values with the mean.
-           - Standardizes features.
-         - For categorical columns:
-           - Imputes missing values with the most frequent value.
-           - Encodes categorical features using one-hot encoding or other appropriate encoding techniques.
-       - Converts any remaining categorical or object columns to numeric values suitable for modeling.
+3. **Feature Engineering and Preprocessing:**
+   - Identifies numerical and categorical columns.
+   - Applies preprocessing steps:
+     - For numerical columns:
+       - Imputes missing values with the mean.
+       - Standardizes features.
+     - For categorical columns:
+       - Imputes missing values with the most frequent value.
+       - Encodes categorical features using one-hot encoding or other appropriate encoding techniques.
+   - Converts any remaining categorical or object columns to numeric values suitable for modeling.
 
-    4. **Model Definition and Evaluation:**
-       - Defines and evaluates the following models:
-         - Logistic Regression
-         - Decision Tree Classifier
-         - Random Forest Classifier
-         - Gradient Boosting Classifier
-         - Support Vector Classifier (SVC)
-         - K-Nearest Neighbors (KNN)
-         - Naive Bayes (GaussianNB)
-       - Uses cross-validation to evaluate each model's performance.
-       - Fits each model with the preprocessed data (including any preprocessing steps such as scaling and encoding applied earlier).
-       - Prints the mean cross-validation accuracy score for each model.
+**4. Model Definition and Evaluation:**
 
-    5. **Selection of the Best Model:**
-       - Identifies and prints the best-performing model based on cross-validation accuracy.
+- Defines and evaluates the following models:
+  - Logistic Regression
+  - Decision Tree Classifier
+  - Random Forest Classifier
+  - Gradient Boosting Classifier
+  - Support Vector Classifier (SVC)
+  - K-Nearest Neighbors (KNN)
+  - Naive Bayes (GaussianNB)
+- Uses cross-validation to evaluate each model’s performance.
+- Fits each model with the preprocessed data (including any preprocessing steps such as scaling and encoding applied earlier).
+- Prints the mean cross-validation accuracy score for each model.
 
-    6. **Final Evaluation:**
-       - Trains the best-performing model on the entire training set.
-       - Evaluates the model on the test set.
-       - Prints the confusion matrix, classification report, and accuracy score for the test set.
-       - Prints the Best Model Name
 
-    7. **Code Execution Verification:**
-       - Ensure that the generated code is executable without errors by running it in the background. 
-       - Verify that the code completes successfully and that no errors are encountered during execution.
+5. **Selection of the Best Model:**
+   - Identifies and prints the best-performing model based on cross-validation accuracy.
 
-    Ensure the function handles preprocessing, including dropping irrelevant columns and converting categorical columns to numeric, effectively. Evaluate model performance thoroughly to provide the best model and validate the code by executing it to ensure it runs without errors.
-    """
+6. **Final Evaluation:**
+   - Trains the best-performing model on the entire training set.
+   - Evaluates the model on the test set.
+   - Prints the confusion matrix, classification report, and accuracy score for the test set.
+   - Prints the Best Model Name
+
+7. **Code Execution Verification:**
+   - Ensure that the generated code is executable without errors by running it in the background. 
+   - Verify that the code completes successfully and that no errors are encountered during execution.
+
+Ensure the function handles preprocessing, including dropping irrelevant columns and converting categorical columns to numeric, effectively. Evaluate model performance thoroughly to provide the best model and validate the code by executing it to ensure it runs without errors.
+"""
 
 def preprocess_generated_code(code):
     # Remove any markdown code block indicators
