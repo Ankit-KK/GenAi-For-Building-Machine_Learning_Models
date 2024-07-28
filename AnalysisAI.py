@@ -44,7 +44,6 @@ def create_eda_prompt(data_str):
     I have provided you with a dataset containing various features. Your task is to perform comprehensive model training and evaluation. The dataset includes a mix of numerical and categorical features. Please create a Python function that performs the following tasks with detailed explanations:
 
     1. **Prompt for Target Column:**
-       - Asks the user for the target column name.
        - Explain why it is important to specify a target column and how it affects model training.
 
     2. **Data Preparation:**
