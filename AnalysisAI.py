@@ -3,16 +3,14 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from io import StringIO, BytesIO
+from io import StringIO
 import traceback  # For detailed error reporting
 import openai
 import fpdf
 
 # Initialize OpenAI client with your NVIDIA API base URL and API key
 api_key = st.secrets["api_key"]  # Store your API key in Streamlit secrets
-client = openai.OpenAI(
-    api_key=api_key
-)
+client = openai.OpenAI(api_key=api_key)
 
 def dataset_to_string(df):
     """Convert a dataset to a string format suitable for the model."""
@@ -20,8 +18,9 @@ def dataset_to_string(df):
     data_info = df.describe(include='all').to_string()
     return f"Data Sample:\n{data_sample}\n\nData Description:\n{data_info}"
 
-def create_eda_prompt(data_str):
+def create_eda_prompt(df):
     """Create a custom EDA prompt for the language model."""
+    data_str = dataset_to_string(df)
     return f"""
 **Role**: You are an expert data analyst.
 
@@ -110,11 +109,8 @@ def main():
         st.write("### Dataset")
         st.write(df.head())
         
-        # Convert dataset to string
-        data_str = dataset_to_string(df)
-        
         # Create EDA prompt
-        eda_prompt = create_eda_prompt(data_str)
+        eda_prompt = create_eda_prompt(df)
         
         # Generate code using the language model
         completion = client.chat.completions.create(
