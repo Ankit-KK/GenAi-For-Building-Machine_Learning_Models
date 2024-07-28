@@ -125,7 +125,7 @@ def get_binary_file_downloader_html(bin_file, file_label='File'):
     return href
 
 def main():
-    st.title("Machine Learning Model Generator")
+    st.title("MLAutoGen")
 
     uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
     
