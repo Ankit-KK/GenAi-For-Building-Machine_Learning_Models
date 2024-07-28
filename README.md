@@ -1,8 +1,8 @@
-# Automated Machine Learning Script Generation Using LLaMA 3.1 8B Instruct
+# MLAutoGen: Automated Machine Learning Script Generation Using LLaMA 3.1 8B Instruct
 
 ## Overview
 
-This project leverages the LLaMA 3.1 8B Instruct model to automate the generation of Python scripts for comprehensive machine learning tasks. The script covers detailed exploratory data analysis (EDA), meticulous data preprocessing, thorough feature selection, comprehensive model selection, rigorous model training and evaluation, and in-depth model comparison and selection. The generated script is structured, modular, and easy to follow, with detailed explanations, visualizations, additional guidelines for error handling, and reproducibility.
+MLAutoGen leverages the LLaMA 3.1 8B Instruct model to automate the generation of Python scripts for comprehensive machine learning tasks. The script covers detailed exploratory data analysis (EDA), meticulous data preprocessing, thorough feature selection, comprehensive model selection, rigorous model training and evaluation, and in-depth model comparison and selection. The generated script is structured, modular, and easy to follow, with detailed explanations, visualizations, additional guidelines for error handling, and reproducibility.
 
 ## Features
 
@@ -18,6 +18,10 @@ This project leverages the LLaMA 3.1 8B Instruct model to automate the generatio
 - **LLaMA 3.1 8B Instruct**: For generating and executing data analysis, visualization, and modeling code.
 - **Python**: The primary programming language used for script generation.
 - **Pandas**: For data manipulation and analysis.
+- **NumPy**: For numerical operations.
+- **Matplotlib** and **Seaborn**: For data visualization.
+- **Scikit-Learn**: For implementing machine learning models and preprocessing techniques.
+
 ## Usage
 
 1. Clone the repository:
