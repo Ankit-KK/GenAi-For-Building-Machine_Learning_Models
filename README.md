@@ -1,5 +1,5 @@
 
-# AnalysisAI
+# Machine Learning Model Generator
 
 ## Overview
 AnalysisAI is an interactive Streamlit app that leverages OpenAI's API
