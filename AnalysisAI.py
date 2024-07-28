@@ -8,9 +8,13 @@ import traceback  # For detailed error reporting
 import openai
 import fpdf
 
+
+
 # Initialize OpenAI client with your NVIDIA API base URL and API key
-api_key = st.secrets["api_key"]  # Store your API key in Streamlit secrets
-client = openai.OpenAI(api_key=api_key)
+client = OpenAI(
+  base_url="https://integrate.api.nvidia.com/v1",
+  api_key = st.secrets["api_key"]  # Store your API key in Streamlit secrets
+)
 
 def dataset_to_string(df):
     """Convert a dataset to a string format suitable for the model."""
