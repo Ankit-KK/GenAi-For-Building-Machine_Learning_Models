@@ -1,0 +1,9 @@
+
+pandas
+numpy
+matplotlib
+seaborn
+io
+traceback
+openai
+fpdf
