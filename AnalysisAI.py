@@ -117,7 +117,7 @@ def main():
         eda_prompt = create_eda_prompt(df)
         
         # Generate code using the language model
-        completion = openai.ChatCompletion.create(
+        completion = client.chat.completions.create(
             model="meta/llama-3.1-8b-instruct",
             messages=[{"role": "user", "content": eda_prompt}],
             temperature=0.5,
@@ -126,8 +126,8 @@ def main():
         )
         
         generated_code = ""
-        for choice in completion.choices:
-            generated_code += choice.message["content"]
+        if chunk.choices[0].delta.content is not None::
+            generated_code += chunk.choices[0].delta.content
         
         # Preprocess generated code (handle potential errors)
         generated_code = generated_code.replace("'''", "\"\"\"")
