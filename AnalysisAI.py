@@ -32,7 +32,7 @@ def create_eda_prompt(data_str):
     **Dataset Overview**:
     - **Data Sample**:
       ```
-      {df.head().to_string(}
+      {df.head().to_string()}
       ```
 
     - **Data Description**:
