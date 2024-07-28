@@ -126,7 +126,7 @@ def main():
         )
         
         generated_code = ""
-        if chunk.choices[0].delta.content is not None::
+        if chunk.choices[0].delta.content is not None:
             generated_code += chunk.choices[0].delta.content
         
         # Preprocess generated code (handle potential errors)
