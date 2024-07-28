@@ -15,7 +15,7 @@ import os
 def get_openai_client():
     return OpenAI(
         base_url="https://integrate.api.nvidia.com/v1",
-        api_key=st.secrets["openai_api_key"]  # Store your API key in Streamlit secrets
+        api_key=st.secrets["api_key"]  # Store your API key in Streamlit secrets
     )
 
 def dataset_to_string(df):
