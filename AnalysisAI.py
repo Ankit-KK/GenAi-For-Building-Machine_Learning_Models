@@ -1,10 +1,4 @@
-It seems that the response object from OpenAI’s API does not have a `delta` attribute in the way it was previously assumed. This could be due to an update or change in the API response format.
 
-To fix this, you need to handle the response differently based on the current OpenAI API documentation. Here’s an updated version of your code with adjustments to handle the API response correctly:
-
-### Updated Streamlit App Code
-
-```python
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -174,11 +168,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-```
-
-### Changes Made:
-1. **Response Handling**: Changed how the response from OpenAI’s API is processed. Instead of `chunk.delta.content`, it now uses `choice.message["content"]` to extract the generated code.
-
-2. **Updated API Call**: Adjusted the API call to use `openai.ChatCompletion.create` instead of `client.chat.completions.create`, assuming you are using OpenAI’s latest API format.
-
-Make sure you replace `"api_key"` with the actual name of your API key stored in Streamlit secrets if it differs. If you have more specific details about your environment or API version, you might need to adjust the code accordingly.
