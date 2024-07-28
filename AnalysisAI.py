@@ -135,16 +135,29 @@ def main():
         st.write("Dataset Preview:")
         st.dataframe(df.head())
 
+        # Prompt for target column
+        target_column = st.text_input("Enter the target column name:")
+
         if st.button("Generate ML Model"):
+            if not target_column or target_column not in df.columns:
+                st.error("Please provide a valid target column name.")
+                return
+
             data_str = dataset_to_string(df)
             eda_prompt = create_eda_prompt(data_str)
+
+            # Update the prompt to include the target column
+            eda_prompt_with_target = eda_prompt.replace(
+                "Your task is to perform comprehensive model training and evaluation.",
+                f"Your task is to perform comprehensive model training and evaluation with the target column '{target_column}'."
+            )
 
             client = get_openai_client()
 
             with st.spinner("Generating ML model code..."):
                 completion = client.chat.completions.create(
                     model="meta/llama-3.1-8b-instruct",
-                    messages=[{"role": "user", "content": eda_prompt}],
+                    messages=[{"role": "user", "content": eda_prompt_with_target}],
                     temperature=0.2,
                     top_p=0.7,
                     max_tokens=2048,
@@ -161,26 +174,6 @@ def main():
 
             st.subheader("Generated Code:")
             st.code(processed_code)
-
-            st.subheader("Code Execution:")
-            output_buffer = StringIO()
-            error_occurred = False
-            try:
-                exec(processed_code, {
-                    'pd': pd, 
-                    'np': np, 
-                    'plt': plt, 
-                    'sns': sns, 
-                    'print': lambda *args, **kwargs: print(*args, file=output_buffer, **kwargs),
-                    'df': df  # Pass the dataframe to the executed code
-                })
-                st.success("Code executed successfully!")
-                st.text(output_buffer.getvalue())
-            except Exception as e:
-                error_occurred = True
-                st.error("An error occurred during code execution:")
-                st.code(traceback.format_exc())
-                st.warning("The generated code might need manual adjustments. Please review and modify as necessary.")
 
             # Save to Python file
             file_path = "ML_model_generated.py"
