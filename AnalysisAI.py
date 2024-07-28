@@ -98,7 +98,7 @@ def create_eda_prompt(data_str):
        - Verify that the code completes successfully and that no errors are encountered during execution.
 
     Ensure that each step includes comments and explanations for the decisions made, particularly regarding data preprocessing, feature engineering, model selection, and evaluation. The goal is to provide transparency and clarity in the machine learning process, so the user can understand the rationale behind each decision.
-    """"""
+    """
 
 def preprocess_generated_code(code):
     # Remove any markdown code block indicators
