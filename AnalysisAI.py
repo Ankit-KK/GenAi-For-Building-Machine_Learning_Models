@@ -7,12 +7,12 @@ import re
 import base64
 import os
 
-# Initialize OpenAI client with your NVIDIA API base URL and API key
+# Initialize OpenAI client with a custom API key
 @st.cache_resource
-def get_openai_client():
+def get_openai_client(api_key):
     return OpenAI(
         base_url="https://integrate.api.nvidia.com/v1",
-        api_key=st.secrets["api_key"]  # Store your API key in Streamlit secrets
+        api_key=api_key
     )
 
 def dataset_to_string(df):
@@ -124,6 +124,15 @@ def get_binary_file_downloader_html(bin_file, file_label='File'):
 def main():
     st.title("MLAutoGen")
 
+    # Prompt the user to input their API key at the start of the app
+    st.warning("The default API key credits are over. Please use your own NVIDIA API Key.")
+    st.info("You can get an API key from here: [NVIDIA Meta LLaMA API Key](https://build.nvidia.com/meta/llama-3_1-405b-instruct)")
+    api_key = st.text_input("Enter your NVIDIA API Key:", type="password")
+
+    if not api_key:
+        st.error("API Key is required to proceed.")
+        return
+
     uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
     
     if uploaded_file is not None:
@@ -148,40 +157,45 @@ def main():
                 f"Your task is to perform comprehensive model training and evaluation with the target column '{target_column}'."
             )
 
-            client = get_openai_client()
+            client = get_openai_client(api_key)
 
-            with st.spinner("Generating ML model code..."):
-                completion = client.chat.completions.create(
-                    model="meta/llama-3.1-8b-instruct",
-                    messages=[{"role": "user", "content": eda_prompt_with_target}],
-                    temperature=0.2,
-                    top_p=0.7,
-                    max_tokens=2048,
-                    stream=True
-                )
+            try:
+                with st.spinner("Generating ML model code..."):
+                    completion = client.chat.completions.create(
+                        model="meta/llama-3.1-8b-instruct",
+                        messages=[{"role": "user", "content": eda_prompt_with_target}],
+                        temperature=0.2,
+                        top_p=0.7,
+                        max_tokens=2048,
+                        stream=True
+                    )
 
-                generated_code = ""
-                for chunk in completion:
-                    if chunk.choices[0].delta.content is not None:
-                        generated_code += chunk.choices[0].delta.content
+                    generated_code = ""
+                    for chunk in completion:
+                        if chunk.choices[0].delta.content is not None:
+                            generated_code += chunk.choices[0].delta.content
 
-            # Preprocess the generated code
-            processed_code = preprocess_generated_code(generated_code)
+                # Preprocess the generated code
+                processed_code = preprocess_generated_code(generated_code)
 
-            st.subheader("Generated Code:")
-            st.code(processed_code)
+                st.subheader("Generated Code:")
+                st.code(processed_code)
 
-            # Save to Python file
-            file_path = "ML_model_generated.py"
-            with open(file_path, "w") as f:
-                f.write(processed_code)
-            st.success(f"Generated code saved to '{file_path}'")
+                # Save to Python file
+                file_path = "ML_model_generated.py"
+                with open(file_path, "w") as f:
+                    f.write(processed_code)
+                st.success(f"Generated code saved to '{file_path}'")
 
-            # Add download button
-            st.markdown(get_binary_file_downloader_html(file_path, 'Generated Python File'), unsafe_allow_html=True)
+                # Add download button
+                st.markdown(get_binary_file_downloader_html(file_path, 'Generated Python File'), unsafe_allow_html=True)
 
-            # Warning message about potential code adjustments
-            st.warning("The generated code might contain minor errors or require slight adjustments.")
+                # Warning message about potential code adjustments
+                st.warning("The generated code might contain minor errors or require slight adjustments.")
+
+            except Exception as e:
+                st.error("The API Key is invalid or credits are over. Please use a valid API Key.")
+                st.info("You can get an API key from here: [NVIDIA Meta LLaMA API Key](https://build.nvidia.com/meta/llama-3_1-405b-instruct)")
 
 if __name__ == "__main__":
     main()
