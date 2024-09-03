@@ -129,6 +129,9 @@ def get_binary_file_downloader_html(bin_file, file_label='File'):
 
 def main():
     st.title("MLAutoGen")
+    
+    # Inform the user about API key credits
+    st.warning("The default API key credits are over. Please use your own NVIDIA API Key.")
 
     uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
     
