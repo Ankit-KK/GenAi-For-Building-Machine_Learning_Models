@@ -1,8 +1,5 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 from openai import OpenAI
 import traceback
 from io import StringIO
@@ -25,11 +22,10 @@ def dataset_to_string(df):
     return f"Data Sample:\n{data_sample}\n\nData Description:\n{data_info}"
 
 def create_eda_prompt(data_str):
-    """Create a custom EDA prompt for the language model."""
+    """Create a custom Model Training prompt for the language model."""
     return f"""
-    **Role**: You are an expert data analyst.
-
-    **Context**: I have provided you with a dataset containing various features. Your task is to perform a comprehensive exploratory data analysis (EDA) to uncover insights, patterns, and potential issues in the data. The dataset includes a mix of numerical and categorical features, and it is crucial to explore these thoroughly to inform further analysis or decision-making.
+   
+    **Role**: You are an expert Data Scientist with a focus on interpretability and transparency.
 
     **Dataset Overview**:
     - **Data Sample**:
@@ -42,63 +38,62 @@ def create_eda_prompt(data_str):
       {data_str.split('Data Description:')[1].strip()}
       ```
 
-    **Tasks**:
+    I have provided you with a dataset containing various features. Your task is to perform comprehensive model training and evaluation. The dataset includes a mix of numerical and categorical features. Please create a Python function that performs the following tasks with detailed explanations:
 
-    1. **Data Overview**:
-       - Print "Executing Task 1: Data Overview"
-       - Inspect the first few rows of the dataset to understand its structure.
-       - Determine the data types of each column (numerical, categorical, etc.).
-       - Check for missing values and describe the proportion of missing data in each column.
+    1. **Prompt for Target Column:**
+       - Explain why it is important to specify a target column and how it affects model training.
 
-    2. **Descriptive Statistics**:
-       - Print "Executing Task 2: Descriptive Statistics"
-       - Calculate summary statistics (mean, median, mode, standard deviation, variance, minimum, maximum) for each numerical column.
-       - Provide insights on the distribution of these numerical features (e.g., skewness, kurtosis).
+    2. **Data Preparation:**
+       - Separates features and the target variable from the dataset.
+       - Drops irrelevant columns that do not contribute to the model's prediction.
+       - Explain the criteria used for deciding which columns to drop and the impact of keeping or removing these columns.
+       - Performs data cleaning, including handling missing values.
+       - Explain the strategies used for handling missing values and their implications on the model.
 
-    3. **Data Visualization**:
-       - Print "Executing Task 3: Data Visualization"
-       - Plot histograms and density plots for each numerical column to visualize distributions.
-       - Create scatter plots to examine relationships between key numerical variables (e.g., feature vs. target variable).
-       - Use box plots to identify outliers and understand the spread of the data.
+    3. **Feature Engineering and Preprocessing:**
+       - Identifies numerical and categorical columns.
+       - Applies preprocessing steps:
+         - For numerical columns:
+           - Imputes missing values with the mean.
+           - Standardizes features.
+           - Explain why mean imputation is used and the benefits of standardization.
+         - For categorical columns:
+           - Imputes missing values with the most frequent value.
+           - Encodes categorical features using one-hot encoding or other appropriate encoding techniques.
+           - Explain the choice of encoding technique and the rationale for imputing missing values with the most frequent value.
+       - Converts any remaining categorical or object columns to numeric values suitable for modeling.
+       - Describe the method used for conversion and the importance of having numeric values for modeling.
 
-    4. **Categorical Data Analysis**:
-       - Print "Executing Task 4: Categorical Data Analysis"
-       - Summarize the frequency of each category within categorical columns.
-       - Use bar plots or count plots to visualize the distribution of categorical variables.
-       - Analyze the relationship between categorical variables and the target variable (if applicable), using grouped bar charts or other appropriate visualizations.
+    4. **Model Definition and Evaluation:**
+       - Defines and evaluates the following models:
+         - Logistic Regression
+         - Decision Tree Classifier
+         - Random Forest Classifier
+         - Gradient Boosting Classifier
+         - Support Vector Classifier (SVC)
+         - K-Nearest Neighbors (KNN)
+         - Naive Bayes (GaussianNB)
+       - Uses cross-validation to evaluate each model's performance.
+       - Fits each model with the preprocessed data (including any preprocessing steps such as scaling and encoding applied earlier).
+       - Prints the mean cross-validation accuracy score for each model.
+       - Explain the choice of models and the rationale behind using cross-validation for performance evaluation.
 
-    5. **Correlation Analysis**:
-       - Print "Executing Task 5: Correlation Analysis"
-       - Compute the correlation matrix for numerical features.
-       - Visualize the correlation matrix using a heatmap and identify pairs of highly correlated features.
-       - Discuss potential implications of multicollinearity and suggest strategies for dealing with it.
+    5. **Selection of the Best Model:**
+       - Identifies and prints the best-performing model based on cross-validation accuracy.
+       - Explain how the best model is selected and why it is considered the best.
 
-    6. **Advanced Analysis**:
-       - Print "Executing Task 6: Advanced Analysis"
-        - **Handle Missing Values:**
-            - Check for missing values in the dataset.
-            - If missing values are present:
-                - Choose an appropriate strategy (e.g., imputation, dropping rows/columns) based on the type and extent of missingness.
-                - Explain the rationale behind the chosen strategy and its potential impact on the analysis.
-                - Implement the chosen strategy to handle missing values.
-        - Perform clustering (e.g., K-means) or dimensionality reduction (e.g., PCA) on the preprocessed data to uncover patterns or groupings in the data.
-       - Identify any anomalies or unusual patterns that might warrant further investigation.
+    6. **Final Evaluation:**
+       - Trains the best-performing model on the entire training set.
+       - Evaluates the model on the test set.
+       - Prints the confusion matrix, classification report, and accuracy score for the test set.
+       - Prints the Best Model Name
+       - Explain the significance of each evaluation metric and how the final model's performance is assessed.
 
-    7. **Insights and Recommendations**:
-       - Print "Executing Task 7: Insights and Recommendations"
-       - Summarize the key findings from the EDA, highlighting significant patterns, trends, or anomalies.
-       - Provide actionable insights based on the analysis, such as data cleaning steps, feature engineering ideas, or further analyses that could be conducted.
-       - Suggest potential next steps, including any additional data that may be required or further analyses that could enhance understanding.
+    7. **Code Execution Verification:**
+       - Ensure that the generated code is executable without errors by running it in the background. 
+       - Verify that the code completes successfully and that no errors are encountered during execution.
 
-    **Instructions for Model**:
-    - Provide Python code snippets for each task, ensuring that the code is efficient, well-commented, and easy to understand.
-    - Include print statements before each task to indicate which task is being executed.
-    - Execute the code snippets where necessary to validate the findings and ensure there are no errors.
-    - If any assumptions are made during the analysis, clearly state them and explain their rationale.
-
-    **Output**:
-    - The analysis should be comprehensive and thorough, providing clear and actionable insights based on the data.
-    - Include any visualizations as part of the output to support the findings and provide a clear understanding of the data.
+    Ensure that each step includes comments and explanations for the decisions made, particularly regarding data preprocessing, feature engineering, model selection, and evaluation. The goal is to provide transparency and clarity in the machine learning process, so the user can understand the rationale behind each decision.
     """
 
 def preprocess_generated_code(code):
@@ -127,7 +122,7 @@ def get_binary_file_downloader_html(bin_file, file_label='File'):
     return href
 
 def main():
-    st.title("ExploraGen")
+    st.title("MLAutoGen")
 
     # Prompt the user to input their API key at the start of the app
     st.warning("The default API key credits are over. Please use your own NVIDIA API Key.")
@@ -145,18 +140,31 @@ def main():
         st.write("Dataset Preview:")
         st.dataframe(df.head())
 
-        if st.button("Generate EDA Code"):
+        # Prompt for target column
+        target_column = st.text_input("Enter the target column name:")
+
+        if st.button("Generate ML Model"):
+            if not target_column or target_column not in df.columns:
+                st.error("Please provide a valid target column name.")
+                return
+
             data_str = dataset_to_string(df)
             eda_prompt = create_eda_prompt(data_str)
+
+            # Update the prompt to include the target column
+            eda_prompt_with_target = eda_prompt.replace(
+                "Your task is to perform comprehensive model training and evaluation.",
+                f"Your task is to perform comprehensive model training and evaluation with the target column '{target_column}'."
+            )
 
             client = get_openai_client(api_key)
 
             try:
-                with st.spinner("Generating EDA code..."):
+                with st.spinner("Generating ML model code..."):
                     completion = client.chat.completions.create(
                         model="meta/llama-3.1-8b-instruct",
-                        messages=[{"role": "user", "content": eda_prompt}],
-                        temperature=0.5,
+                        messages=[{"role": "user", "content": eda_prompt_with_target}],
+                        temperature=0.2,
                         top_p=0.7,
                         max_tokens=2048,
                         stream=True
@@ -174,14 +182,13 @@ def main():
                 st.code(processed_code)
 
                 # Save to Python file
-                file_path = "eda_generated.py"
+                file_path = "ML_model_generated.py"
                 with open(file_path, "w") as f:
                     f.write(processed_code)
                 st.success(f"Generated code saved to '{file_path}'")
 
-                # Add download button for the generated Python file
-                with open(file_path, 'r') as f:
-                    st.download_button('Download EDA Code', f, file_name=file_path, mime='text/plain')
+                # Add download button
+                st.markdown(get_binary_file_downloader_html(file_path, 'Generated Python File'), unsafe_allow_html=True)
 
                 # Warning message about potential code adjustments
                 st.warning("The generated code might contain minor errors or require slight adjustments.")
