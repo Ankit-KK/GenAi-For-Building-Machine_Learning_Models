@@ -7,19 +7,13 @@ import re
 import base64
 import os
 
-# Initialize OpenAI client with a custom or default API key
+# Initialize OpenAI client with a custom API key
 @st.cache_resource
-def get_openai_client(api_key=None):
-    if api_key:
-        return OpenAI(
-            base_url="https://integrate.api.nvidia.com/v1",
-            api_key=api_key
-        )
-    else:
-        return OpenAI(
-            base_url="https://integrate.api.nvidia.com/v1",
-            api_key=st.secrets["api_key"]  # Use default API key from Streamlit secrets
-        )
+def get_openai_client(api_key):
+    return OpenAI(
+        base_url="https://integrate.api.nvidia.com/v1",
+        api_key=api_key
+    )
 
 def dataset_to_string(df):
     """Convert a dataset to a string format suitable for the model."""
@@ -129,9 +123,15 @@ def get_binary_file_downloader_html(bin_file, file_label='File'):
 
 def main():
     st.title("MLAutoGen")
-    
-    # Inform the user about API key credits
+
+    # Prompt the user to input their API key at the start of the app
     st.warning("The default API key credits are over. Please use your own NVIDIA API Key.")
+    st.info("You can get an API key from here: [NVIDIA Meta LLaMA API Key](https://build.nvidia.com/meta/llama-3_1-405b-instruct)")
+    api_key = st.text_input("Enter your NVIDIA API Key:", type="password")
+
+    if not api_key:
+        st.error("API Key is required to proceed.")
+        return
 
     uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
     
@@ -156,9 +156,6 @@ def main():
                 "Your task is to perform comprehensive model training and evaluation.",
                 f"Your task is to perform comprehensive model training and evaluation with the target column '{target_column}'."
             )
-
-            # Prompt for custom API key
-            api_key = st.text_input("Enter your NVIDIA API Key (Optional):", type="password")
 
             client = get_openai_client(api_key)
 
@@ -197,7 +194,7 @@ def main():
                 st.warning("The generated code might contain minor errors or require slight adjustments.")
 
             except Exception as e:
-                st.error("The API Key credits are over. Please use your own API Key.")
+                st.error("The API Key is invalid or credits are over. Please use a valid API Key.")
                 st.info("You can get an API key from here: [NVIDIA Meta LLaMA API Key](https://build.nvidia.com/meta/llama-3_1-405b-instruct)")
 
 if __name__ == "__main__":
