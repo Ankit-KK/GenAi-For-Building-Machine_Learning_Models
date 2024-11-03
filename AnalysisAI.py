@@ -127,6 +127,7 @@ def main():
     # Prompt the user to input their API key at the start of the app
     st.warning("The default API key credits are over. Please use your own NVIDIA API Key.")
     st.info("You can get an API key from here: [NVIDIA Meta LLaMA API Key](https://build.nvidia.com/meta/llama-3_1-405b-instruct)")
+    st.info("🎊 Its Free Again. Use This API Key : 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 🎊")
     api_key = st.text_input("Enter your NVIDIA API Key:", type="password")
 
     if not api_key:
