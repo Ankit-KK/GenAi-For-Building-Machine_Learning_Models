@@ -124,7 +124,7 @@ def get_binary_file_downloader_html(bin_file, file_label='File'):
 def main():
     st.title("MLAutoGen")
 
-    api_key = "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"
+    api_key = st.secrets["api_keys"]
 
     # Prompt the user to input their API key at the start of the app
     #st.info("🎊 Its Free Again. Use This API Key : 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 🎊")
