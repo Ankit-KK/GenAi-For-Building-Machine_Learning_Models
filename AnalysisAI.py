@@ -102,7 +102,7 @@ def get_binary_file_downloader_html(bin_file, file_label='File'):
 def main():
     st.title("MLAutoGen: Advanced Machine Learning Model Trainer")
 
-    api_key = st.secrets["api_key"]
+    api_key = st.secrets["API_KEY"]
 
     uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
     if uploaded_file is not None:
