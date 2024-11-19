@@ -11,7 +11,7 @@ import os
 def get_openai_client(api_key):
     return OpenAI(
         base_url="https://integrate.api.nvidia.com/v1",
-         api_key=st.secrets["API_KEY"]
+         api_key="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"
     )
 
 def dataset_to_string(df):
