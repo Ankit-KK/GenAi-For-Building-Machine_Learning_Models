@@ -11,7 +11,7 @@ import os
 def get_openai_client(api_key):
     return OpenAI(
         base_url="https://integrate.api.nvidia.com/v1",
-         api_key="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"
+         api_key="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"
     )
 
 def dataset_to_string(df):
@@ -102,7 +102,7 @@ def get_binary_file_downloader_html(bin_file, file_label='File'):
 def main():
     st.title("MLAutoGen: Advanced Machine Learning Model Trainer")
 
-    api_key = "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"
+    api_key = "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"
 
     uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
     if uploaded_file is not None:
