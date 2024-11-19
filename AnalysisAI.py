@@ -6,12 +6,12 @@ import re
 import base64
 import os
 
-# Initialize OpenAI client with a custom API key
+# Initialize NVIDIA OpenAI client
 @st.cache_resource
 def get_openai_client(api_key):
     return OpenAI(
-        base_url="https://integrate.api.nvidia.com/v1",
-         api_key="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"
+        base_url="https://integrate.api.nvidia.com/v1",  # NVIDIA API endpoint
+        api_key=api_key  # Your NVIDIA API key
     )
 
 def dataset_to_string(df):
@@ -37,49 +37,11 @@ def create_ml_training_prompt(data_str, target_column):
       ```
 
     Please create Python code that performs the following tasks with detailed comments and explanations:
-
-    1. **Data Preparation:**
-       - Separate features and the target variable.
-       - Drop irrelevant columns based on statistical thresholds or domain knowledge.
-       - Handle missing values using appropriate strategies for both numerical and categorical features.
-       - Standardize numerical features and encode categorical features effectively.
-
-    2. **Feature Selection:**
-       - Identify and remove multicollinear features using correlation or variance inflation factor (VIF).
-       - Use Recursive Feature Elimination (RFE) or Tree-based Feature Selection for dimensionality reduction.
-
-    3. **Advanced Model Training:**
-       - Train and evaluate the following machine learning models:
-         - Logistic Regression
-         - Random Forest
-         - Gradient Boosting Machines (GBM)
-         - XGBoost
-         - LightGBM
-         - CatBoost
-         - Support Vector Machines (SVM)
-         - K-Nearest Neighbors (KNN)
-         - Multi-Layer Perceptron (MLP) Neural Networks
-       - Use cross-validation (e.g., 5-fold or 10-fold) to evaluate performance.
-       - Perform hyperparameter tuning for advanced models like XGBoost, LightGBM, and CatBoost using Grid Search or Random Search.
-
-    4. **Performance Metrics:**
-       - Report and visualize key metrics for each model, including:
-         - Accuracy
-         - Precision, Recall, F1-Score
-         - AUC-ROC curves
-         - Confusion Matrix
-       - Explain the significance of each metric and its impact on model selection.
-
-    5. **Model Comparison and Selection:**
-       - Compare model performance based on the evaluation metrics.
-       - Identify and explain the best-performing model with supporting evidence from metrics and visualizations.
-
-    6. **Final Model Evaluation:**
-       - Train the selected model on the entire training set.
-       - Evaluate it on a separate test set, providing metrics and insights.
-       - Generate feature importance plots for interpretability (if applicable).
-
-    Ensure that all steps include sufficient explanations and rationale for your choices, making the code easy to follow and understand for non-technical users.
+    1. **Data Preparation:** (Handle missing values, standardization, encoding, etc.)
+    2. **Feature Selection:** (Use RFE, correlation thresholds, etc.)
+    3. **Model Training and Evaluation:** Train multiple models and tune hyperparameters.
+    4. **Performance Metrics:** Visualize metrics like AUC-ROC, precision-recall, etc.
+    5. **Final Model Evaluation:** Train on the full dataset and evaluate on test data.
     """
 
 def preprocess_generated_code(code):
@@ -102,7 +64,8 @@ def get_binary_file_downloader_html(bin_file, file_label='File'):
 def main():
     st.title("MLAutoGen: Advanced Machine Learning Model Trainer")
 
-    api_key = "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"
+    # Replace this with your actual NVIDIA API key
+    api_key = st.secrets["API_KEY"]
 
     uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
     if uploaded_file is not None:
@@ -123,8 +86,9 @@ def main():
 
             try:
                 with st.spinner("Generating ML model code..."):
+                    # Use the NVIDIA model
                     completion = client.chat.completions.create(
-                        model="meta/llama-3.1-8b-instruct",
+                        model="meta/llama-3.2-3b-instruct",  # Updated model
                         messages=[{"role": "user", "content": ml_prompt}],
                         temperature=0.2,
                         top_p=0.7,
