@@ -1,17 +1,22 @@
 import streamlit as st
 import pandas as pd
-from openai import OpenAI
-import traceback
 import re
 import base64
 import os
+from langchain_nvidia_ai_endpoints import ChatNVIDIA
+import traceback
 
-# Initialize NVIDIA OpenAI client
+api_key = st.secrets["API_KEY"]
+
+# Initialize NVIDIA LangChain client
 @st.cache_resource
-def get_openai_client(api_key):
-    return OpenAI(
-        base_url="https://integrate.api.nvidia.com/v1",  # NVIDIA API endpoint
-        api_key=api_key  # Your NVIDIA API key
+def get_nvidia_client():
+    return ChatNVIDIA(
+        model="meta/llama-3.2-3b-instruct",  # Updated NVIDIA LangChain model
+        api_key=api_key,       # Replace with your actual NVIDIA API key
+        temperature=0.2,
+        top_p=0.7,
+        max_tokens=2048,
     )
 
 def dataset_to_string(df):
@@ -23,7 +28,7 @@ def dataset_to_string(df):
 def create_ml_training_prompt(data_str, target_column):
     """Create a detailed prompt for generating a machine learning pipeline."""
     return f"""
-    **Role**: You are an expert Data Scientist and Machine Learning Engineer with a focus on interpretability, transparency, and robust model development.
+     **Role**: You are an expert Data Scientist and Machine Learning Engineer with a focus on interpretability, transparency, and robust model development.
 
     I have provided you with a dataset containing various features, including the target column '{target_column}'. Your task is to create a Python script for a comprehensive machine learning pipeline. The dataset includes a mix of numerical and categorical features. Please ensure all steps are well-documented and explain the rationale behind each decision.
 
@@ -120,9 +125,29 @@ def get_binary_file_downloader_html(bin_file, file_label='File'):
 def main():
     st.title("MLAutoGen: Advanced Machine Learning Model Trainer")
 
-    # Replace this with your actual NVIDIA API key
-    api_key = st.secrets["API_KEY"]
+    # Feedback Section using Google Form
+    st.sidebar.subheader("We Value Your Feedback")
+    st.sidebar.markdown("""
+    <a href="https://forms.gle/rTrFC4rwqfJ9B6mE9" target="_blank">
+        <button style="
+            background-color: #4CAF50; 
+            color: white; 
+            padding: 10px 20px; 
+            text-align: center; 
+            text-decoration: none; 
+            display: inline-block; 
+            font-size: 14px; 
+            margin: 4px 2px; 
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+        ">
+            Submit Feedback
+        </button>
+    </a>
+    """, unsafe_allow_html=True)
 
+    # File Upload Section
     uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
     if uploaded_file is not None:
         df = pd.read_csv(uploaded_file)
@@ -138,35 +163,27 @@ def main():
             data_str = dataset_to_string(df)
             ml_prompt = create_ml_training_prompt(data_str, target_column)
 
-            client = get_openai_client(api_key)
+            client = get_nvidia_client()
 
             try:
                 with st.spinner("Generating ML model code..."):
-                    # Use the NVIDIA model
-                    completion = client.chat.completions.create(
-                        model="meta/llama-3.2-3b-instruct",  # Updated model
-                        messages=[{"role": "user", "content": ml_prompt}],
-                        temperature=0.2,
-                        top_p=0.7,
-                        max_tokens=2048,
-                        stream=True
-                    )
-
                     generated_code = ""
-                    for chunk in completion:
-                        if chunk.choices[0].delta.content is not None:
-                            generated_code += chunk.choices[0].delta.content
+                    for chunk in client.stream([{"role": "user", "content": ml_prompt}]):
+                        if chunk.content:
+                            generated_code += chunk.content
 
                 processed_code = preprocess_generated_code(generated_code)
 
                 st.subheader("Generated Code:")
                 st.code(processed_code)
 
+                # Save the generated code for download
                 file_path = "ML_model_generated.py"
                 with open(file_path, "w") as f:
                     f.write(processed_code)
                 st.success(f"Generated code saved to '{file_path}'")
 
+                # Provide download link
                 st.markdown(get_binary_file_downloader_html(file_path, 'Generated Python File'), unsafe_allow_html=True)
 
                 st.warning("The generated code might require minor adjustments before execution.")
