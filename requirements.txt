@@ -5,3 +5,4 @@ seaborn
 streamlit
 openai
 fpdf
+langchain_nvidia_ai_endpoints
