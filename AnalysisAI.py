@@ -6,7 +6,7 @@ import os
 from langchain_nvidia_ai_endpoints import ChatNVIDIA
 import traceback
 
-api_key = st.secrets["API_KEY"]
+api_key = st.secrets["API"]
 
 # Initialize NVIDIA LangChain client
 @st.cache_resource
