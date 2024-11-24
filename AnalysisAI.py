@@ -11,13 +11,13 @@ api_key = st.secrets["API_KEY"]
 # Initialize NVIDIA LangChain client
 @st.cache_resource
 def get_nvidia_client():
-    return ChatNVIDIA(
-        model="meta/llama-3.2-3b-instruct",  # Updated NVIDIA LangChain model
-        api_key=api_key,       # Replace with your actual NVIDIA API key
-        temperature=0.2,
-        top_p=0.7,
-        max_tokens=2048,
-    )
+     return ChatNVIDIA(
+  model="meta/llama-3.1-405b-instruct",
+        api_key=api_key, 
+  temperature=0.2,
+  top_p=0.7,
+  max_tokens=1024,
+)
 
 def dataset_to_string(df):
     """Convert a dataset to a string format suitable for the model."""
