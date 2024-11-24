@@ -12,13 +12,12 @@ api_key = st.secrets["API_KEY"]
 @st.cache_resource
 def get_nvidia_client():
      return ChatNVIDIA(
-  model="meta/llama-3.1-405b-instruct",
-        api_key=api_key, 
+  model="meta/llama-3.1-70b-instruct",
+  api_key=api_key, 
   temperature=0.2,
   top_p=0.7,
   max_tokens=1024,
 )
-
 def dataset_to_string(df):
     """Convert a dataset to a string format suitable for the model."""
     data_sample = df.head().to_string()
