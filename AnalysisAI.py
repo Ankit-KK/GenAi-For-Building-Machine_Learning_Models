@@ -16,7 +16,7 @@ def get_nvidia_client():
   api_key="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", 
   temperature=0.2,
   top_p=0.7,
-  max_tokens=1024,
+  max_tokens=4096,
 )
 
 def dataset_to_string(df):
