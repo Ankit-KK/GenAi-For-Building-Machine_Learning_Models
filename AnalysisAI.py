@@ -13,7 +13,7 @@ api_key = st.secrets["API_KEY"]
 def get_nvidia_client():
      return ChatNVIDIA(
   model="meta/llama-3.2-3b-instruct",
-  api_key="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", 
+  api_key=api_key, 
   temperature=0.2,
   top_p=0.7,
   max_tokens=4096,
@@ -126,7 +126,7 @@ def main():
     st.title("MLAutoGen: Advanced Machine Learning Model Trainer")
 
     # Feedback Section using Google Form
-    st.sidebar.subheader("We Value Your Feedback")
+    st.sidebar.subheader("I appreciate your feedback.")
     st.sidebar.markdown("""
     <a href="https://forms.gle/rTrFC4rwqfJ9B6mE9" target="_blank">
         <button style="
