@@ -148,7 +148,7 @@ def main():
                         api_key=st.secrets.get("api_key"),
                         temperature=0.2,
                         top_p=0.7,
-                        max_tokens=1024,
+                        max_tokens=2048,
                     )
 
                     generated_code = ""
